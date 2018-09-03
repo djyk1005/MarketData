@@ -78,7 +78,7 @@ public class MarketControl {
 			}
 		}
 		model.addAttribute("company", comp);
-		return "stockinfo";
+		return "SearchPageResults";
 	}
 
 	/**

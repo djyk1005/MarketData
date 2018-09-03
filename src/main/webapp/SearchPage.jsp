@@ -1,5 +1,5 @@
-<!-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%> -->
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,19 +33,18 @@
         <div class="row">    
             <div class="col-xs-8 col-xs-offset-2">
                 <div class="input-group">
-                    <form>
+                    <form action="mvc/find" method="GET">
                     <div class="form-group">
-                        <select class="form-control" id="exampleFormControlSelect1" style="background-color: #AFBAC7">
-                        <option>Ticker</option>
-                        <option>Company</option>
+                        <select name="dropdown" class="form-control" id="exampleFormControlSelect1" style="background-color: #AFBAC7">
+                        <option value="ticker">Ticker</option>
+                        <option value="company">Company</option>
                         </select>
                     </div>
-                    </form>
-                        <input type="hidden" name="search_param" value="all" id="search_param" style="color: rgb(112,119,129)">         
-                        <input type="text" class="form-control" name="x" placeholder="" style="color: rgb(112,119,129)">
+                        <input type="text" class="form-control" name="ticker" placeholder="" style="color: rgb(112,119,129)">
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-light">Search</button>
+                                <button type="submit" class="btn btn-light">Search</button>
                             </span>
+                        </form>
                 </div>
             </div>
         </div>
