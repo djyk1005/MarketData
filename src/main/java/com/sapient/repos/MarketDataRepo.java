@@ -10,18 +10,41 @@ import pl.zankowski.iextrading4j.client.rest.request.stocks.QuoteRequestBuilder;
 
 @Repository
 public class MarketDataRepo {
+	/** this is the object that allows for communication with IEX. */
 	final IEXTradingClient iexTradingClient = IEXTradingClient.create();
 	
+	/**********************************Methods********************************/
+	/**
+	 * finds and returns a Company object that matches the ticker of the String
+	 * tick.
+	 * 
+	 * @param tick
+	 * 		  String of ticker of desired company.
+	 * 
+	 * @return a new company object of the company that matches the ticker.
+	 */
 	public Company findCompTick(String tick) {
-		final Quote quote = iexTradingClient.executeRequest(new QuoteRequestBuilder()
+		final Quote quote = iexTradingClient.executeRequest(
+				new QuoteRequestBuilder()
 		        .withSymbol(tick)
 		        .build());
-		return new Company(quote.getCompanyName(), quote.getSymbol(), quote.getLatestPrice(), quote.getChange(), quote.getChangePercent());
+		return new Company(quote.getCompanyName(), quote.getSymbol(), 
+				quote.getLatestPrice(), quote.getChange(), 
+				quote.getChangePercent());
 		
 	}
 	
+	/**
+	 * gets more information about a company.
+	 * 
+	 * @param comp
+	 * 		  Company to find more info about.
+	 * 
+	 * @return the same company but with more added information.
+	 */
 	public Company detailedInfo(Company comp) {
-		final Quote quote = iexTradingClient.executeRequest(new QuoteRequestBuilder()
+		final Quote quote = iexTradingClient.executeRequest(
+				new QuoteRequestBuilder()
 		        .withSymbol(comp.getTick())
 		        .build());
 		comp.setOpen(quote.getOpen());

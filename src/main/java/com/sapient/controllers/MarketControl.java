@@ -24,19 +24,43 @@ import pl.zankowski.iextrading4j.client.rest.request.refdata.SymbolsRequestBuild
 @Controller
 public class MarketControl {
 	
-	CompData cd = new CompData();
-
-	{final IEXTradingClient iexTradingClient = IEXTradingClient.create();
-	final List<ExchangeSymbol> exchangeSymbolList = iexTradingClient.executeRequest(new SymbolsRequestBuilder()
-			.build());
-	cd.addData(exchangeSymbolList);
-	}
-
+	/** repo takes care of communication with the IEX api. */
 	@Autowired
 	MarketDataRepo repo;
+	
+	/** cd holds the data of all the company names listed on IEX. */
+	CompData cd = new CompData();
+	
+	/***********************Initialization Block******************************/
 
+	{
+	final IEXTradingClient iexTradingClient = IEXTradingClient.create();
+	final List<ExchangeSymbol> exchangeSymbolList = iexTradingClient.
+			executeRequest(new SymbolsRequestBuilder().build());
+	cd.addData(exchangeSymbolList);
+	}
+	
+	/**********************************Methods********************************/
+	
+	/**
+	 * takes in the parameters of tick and drop and finds the company 
+	 * depending on the company's name or it's ticker and puts the 
+	 * company information in model for the JSP file to read.
+	 * 
+	 * @param model
+	 * 		  Holds information to be used in the JSP files.
+	 * 
+	 * @param tick
+	 * 		  Either the company's name of it's ticker.
+	 * 
+	 * @param drop
+	 * 		  Either "ticker" or "company".
+	 * 
+	 * @return string for the JSP file
+	 */
 	@RequestMapping(path="/find", method=RequestMethod.GET)
-	public String findComp(Model model, @RequestParam("ticker") String tick, @RequestParam("dropdown") String drop){
+	public String findComp(Model model, @RequestParam("ticker") String tick, 
+			@RequestParam("dropdown") String drop){
 		Company comp = null;
 		if(drop.equals("ticker")) {
 			try {
@@ -44,7 +68,6 @@ public class MarketControl {
 			}catch(IEXTradingException e ) {
 				System.out.println("hello");
 			}
-
 		}else {
 			tick = cd.findTicker(tick);
 			System.out.println(tick);
@@ -54,11 +77,23 @@ public class MarketControl {
 				System.out.println("hello");
 			}
 		}
-
 		model.addAttribute("company", comp);
 		return "stockinfo";
 	}
 
+	/**
+	 * takes in the parameter of the ticker of a company and finds 
+	 * more information about the company and adds it to model for 
+	 * the JSP file to read.
+	 * 
+	 * @param model
+	 * 		  Holds information to be used in the JSP files.
+	 * 
+	 * @param tick
+	 * 		  ticker of the company in search.
+	 * 
+	 * @return string for the JSP file
+	 */
 	@RequestMapping(path="/seeMore", method=RequestMethod.GET)
 	public String details(Model model,  @RequestParam("ticker") String tick){
 		Company comp = null;
@@ -71,13 +106,29 @@ public class MarketControl {
 		return "detailedinfo";
 	}
 	
+	/**
+	 * takes in the parameter of the name or partial name of a company
+	 * and finds more information about the company and adds it to model for 
+	 * the JSP file to read.
+	 * 
+	 * @param model
+	 * 		  Holds information to be used in the JSP files.
+	 * 
+	 * @param name
+	 * 		  partial or full name/ticker of the company to search
+	 * 
+	 * @return string for the JSP file
+	 */
 	@RequestMapping(path="/search", method=RequestMethod.GET)
 	public String search(Model model,  @RequestParam("name") String name){
 		List<String> comps = new ArrayList<String>();
 		List<Company> compList = new ArrayList<Company>();
 		try {
-			comps = cd.findTickers(name).stream().map(comp -> cd.findTicker(comp)).collect(Collectors.toList());
-			compList = comps.stream().map(c -> repo.findCompTick(c)).collect(Collectors.toList());
+			comps = cd.findTickers(name).stream().
+					map(comp -> cd.findTicker(comp)).
+					collect(Collectors.toList());
+			compList = comps.stream().map(c -> repo.findCompTick(c)).
+					collect(Collectors.toList());
 		}catch(IEXTradingException e ) {
 			System.out.println("hello");
 		}
