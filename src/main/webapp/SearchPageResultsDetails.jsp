@@ -1,5 +1,5 @@
-<!-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%> -->
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -71,65 +71,40 @@
             <div class="row">    
                 <div class="col-xs-8 col-xs-offset-2">
                     <div class="input-group">
-                        <form>
+                        <form class="form-inline" action="find" method="GET">
                             <div class="form-group">
-                                <select class="form-control" id="exampleFormControlSelect1" style="background-color: #AFBAC7">
-                                <option>Ticker</option>
-                                <option>Company</option>
+                                <select name="dropdown" class="form-control" id="exampleFormControlSelect1" style="background-color: #AFBAC7">
+                                <option value="ticker">Ticker</option>
+                                <option value="company">Company</option>
                                 </select>
                             </div>
-                        </form>
-                        <input type="hidden" name="search_param" value="all" id="search_param" style="color: rgb(112,119,129)">         
-                            <input type="text" class="form-control" name="x" placeholder="" style="color: rgb(112,119,129)">
+                           
+                            <input type="text" class="form-control" name="ticker" placeholder="" style="color: rgb(112,119,129)">
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-light">Search</button>
+                                    <button type="submit" class="btn btn-light">Search</button>
                                 </span>
+                            </form>
                      </div>
                 </div>
             </div>
         </div>
 
-        <div class="results">
-            <div class="row">
-                <div class="col-xs-8 col-xs-offset-2">
-                    <div class="results-list">
-                            <table class="table table-bordered">
-                                    <thead>
-                                        <tr style="background-color: #F2F4F9">
-                                            <th>Watchlist</th>
-                                            <th>Name        </th>
-                                            <th>Price (USD)</th>
-                                            <th>Change</th>
-                                            <th>% Change</th>
-                                        </tr>
-                                    </thead>
-                                    <tr>
-                                        <td><%=  %></td>
-                                        <td> Name and Ticker </td>
-                                        <td> Price </td>
-                                        <td> Change </td>
-                                        <td> % Change </td>
-                                    </tr>
-                                </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <div>
             <div class="row">
                 <div class="results-box">
                     <div class="col-xs-8 col-xs-offset-2">
                         <div class="result-main-details" style="float:left">
-                            <b>Name and Ticker</b> </br>
-                            Price Change % Change </br>
-                             Volume </br>
+                            <b>${company.getName()} (${company.getTick()})</b> </br>
+                            ${company.getPrice()} ${company.getPriceChange()} ${company.getPercentChange()}</br>
+                            ${company.getAvgTotVolume()} </br>
                         </div>
                         <table class="result-details" style="float:right">
                             <tr><td><b>Bid/Ask</b></td> <td> N/A </td> <td><b>Div Yield</b></td>  <td>1.01%</td></tr>
-                            <tr><td><b>Open</b></td>    <td> N/A </td> <td><b>Prev Close</b></td> <td>1.01%</td></tr>
-                            <tr><td><b>High</b></td>    <td> N/A </td> <td><b>52-wk High</b></td> <td>1.01%</td></tr>
-                            <tr><td><b>Low</b></td>     <td> N/A </td> <td><b>52-wk Low</b></td>  <td>1.01%</td></br>
-                            <tr><td><b>Market Cap</b></td> <td>N/A</td><td><b>P/E Ratio</b></td>  <td>1.01%</td></br>
+                            <tr><td><b>Open</b></td>    <td> ${company.getOpen()} </td> <td><b>Prev Close</b></td> <td>${company.getPrevClose()}</td></tr>
+                            <tr><td><b>High</b></td>    <td> ${company.getHigh()} </td> <td><b>52-wk High</b></td> <td>${company.getFifty2WeekHigh()}</td></tr>
+                            <tr><td><b>Low</b></td>     <td> ${company.getLow()} </td> <td><b>52-wk Low</b></td>  <td>${company.getFifty2WeekLow()}</td></br>
+                            <tr><td><b>Market Cap</b></td> <td>${company.getMrktCap()}</td><td><b>P/E Ratio</b></td>  <td>${company.getPeRatio()}</td></br>
                         </table>
                         <div id="date-stamp">
                             <small><p id="datetime"></p></small>

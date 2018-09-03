@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Invalid Roll No</title>
+    <title>Invalid</title>
 </head>
 <body>
-    <h1>INVALID ROLL NUMBER!</h1>
+    <h1>SOMETHING WENT WRONG!!!</h1>
     
 </body>
 </html>

@@ -43,9 +43,9 @@ public class MarketControl {
 	/**********************************Methods********************************/
 	
 	/**
-	 * takes in the parameters of tick and drop and finds the company 
+	 * takes in the parameters of tick and drop and finds a list of companies
 	 * depending on the company's name or it's ticker and puts the 
-	 * company information in model for the JSP file to read.
+	 * companies' information in model for the JSP file to read.
 	 * 
 	 * @param model
 	 * 		  Holds information to be used in the JSP files.
@@ -60,24 +60,28 @@ public class MarketControl {
 	 */
 	@RequestMapping(path="/find", method=RequestMethod.GET)
 	public String findComp(Model model, @RequestParam("ticker") String tick, 
-			@RequestParam("dropdown") String drop){
-		Company comp = null;
-		if(drop.equals("ticker")) {
-			try {
-				comp = repo.findCompTick(tick);
-			}catch(IEXTradingException e ) {
-				System.out.println("hello");
+			@RequestParam("dropdown") String drop){	
+		List<String> comps = new ArrayList<String>();
+		List<Company> compList = new ArrayList<Company>();
+		try {
+			if(drop.equals("ticker")) {
+				comps = cd.tickers(tick);
+				compList = comps.stream().map(c -> repo.findCompTick(c)).
+						collect(Collectors.toList());
+			
+			}else {
+				comps = cd.findTickers(tick).stream().
+						map(comp -> cd.findTicker(comp)).
+						collect(Collectors.toList());
+				compList = comps.stream().map(c -> repo.findCompTick(c)).
+						collect(Collectors.toList());
 			}
-		}else {
-			tick = cd.findTicker(tick);
-			System.out.println(tick);
-			try {
-				comp = repo.findCompTick(tick);
-			}catch(IEXTradingException e ) {
-				System.out.println("hello");
-			}
+		}catch(IEXTradingException e ) {
+			System.out.println("hello");
+			return "invalid";
 		}
-		model.addAttribute("company", comp);
+		System.out.println(compList.size());
+		model.addAttribute("companies", compList);
 		return "SearchPageResults";
 	}
 
@@ -101,40 +105,10 @@ public class MarketControl {
 			comp = repo.findCompTick(tick);
 		}catch(IEXTradingException e ) {
 			System.out.println("hello");
+			return "invalid";
 		}
 		model.addAttribute("company", repo.detailedInfo(comp));
-		return "detailedinfo";
+		return "SearchPageResultsDetails";
 	}
 	
-	/**
-	 * takes in the parameter of the name or partial name of a company
-	 * and finds more information about the company and adds it to model for 
-	 * the JSP file to read.
-	 * 
-	 * @param model
-	 * 		  Holds information to be used in the JSP files.
-	 * 
-	 * @param name
-	 * 		  partial or full name/ticker of the company to search
-	 * 
-	 * @return string for the JSP file
-	 */
-	@RequestMapping(path="/search", method=RequestMethod.GET)
-	public String search(Model model,  @RequestParam("name") String name){
-		List<String> comps = new ArrayList<String>();
-		List<Company> compList = new ArrayList<Company>();
-		try {
-			comps = cd.findTickers(name).stream().
-					map(comp -> cd.findTicker(comp)).
-					collect(Collectors.toList());
-			compList = comps.stream().map(c -> repo.findCompTick(c)).
-					collect(Collectors.toList());
-		}catch(IEXTradingException e ) {
-			System.out.println("hello");
-		}
-		model.addAttribute("companies", compList);
-		return "search";
-	}
-
-
 }

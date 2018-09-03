@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import pl.zankowski.iextrading4j.api.exception.IEXTradingException;
 import pl.zankowski.iextrading4j.api.refdata.ExchangeSymbol;
 
 public class CompData {
@@ -53,7 +54,7 @@ public class CompData {
 	 * 		  Data about a company
 	 */
 	public void add(ExchangeSymbol es) {
-		this.tickers.put(es.getName().toLowerCase(), es.getSymbol());
+		this.tickers.put(es.getName().toLowerCase(), es.getSymbol().toLowerCase());
 		this.compName.add(es.getName().toLowerCase());
 	}
 	
@@ -74,6 +75,9 @@ public class CompData {
 		if(results.size() > 10) {
 			results = results.subList(0, 10);
 		}
+		if(results.size() == 0) {
+			throw new IEXTradingException("ERROR");
+		}
 		return results;
 	}
 	
@@ -89,6 +93,28 @@ public class CompData {
 	public String findTicker(String name) {
 		List<String> results = this.findTickers(name);
 		return this.tickers.get(results.get(0));
+	}
+	
+	/**
+	 * tickers finds a list of tickers that include the partial or full
+	 * ticker in the parameter name.
+	 * 
+	 * @param name
+	 * 		  Partial name or full name of company
+	 * 
+	 * @return first element of list of Strings
+	 */
+	public List<String> tickers(String name) {
+		List<String> results = this.tickers.values().stream().
+				filter(comp -> comp.contains(name.toLowerCase()))
+				.collect(Collectors.toList());
+		if(results.size() > 10) {
+			results = results.subList(0, 10);
+		}
+		if(results.size() == 0) {
+			throw new IEXTradingException("ERROR");
+		}
+		return results;
 	}
 	
 }

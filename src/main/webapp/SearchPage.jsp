@@ -33,7 +33,7 @@
         <div class="row">    
             <div class="col-xs-8 col-xs-offset-2">
                 <div class="input-group">
-                    <form action="mvc/find" method="GET">
+                    <form class="form-inline" action="mvc/find" method="GET">
                     <div class="form-group">
                         <select name="dropdown" class="form-control" id="exampleFormControlSelect1" style="background-color: #AFBAC7">
                         <option value="ticker">Ticker</option>
