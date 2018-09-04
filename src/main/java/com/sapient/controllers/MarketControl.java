@@ -30,6 +30,7 @@ public class MarketControl {
 	
 	/** cd holds the data of all the company names listed on IEX. */
 	CompData cd = new CompData();
+	List<String> compNames = new ArrayList<String>();
 	
 	/***********************Initialization Block******************************/
 
@@ -38,6 +39,7 @@ public class MarketControl {
 	final List<ExchangeSymbol> exchangeSymbolList = iexTradingClient.
 			executeRequest(new SymbolsRequestBuilder().build());
 	cd.addData(exchangeSymbolList);
+	compNames = cd.allCompNames(exchangeSymbolList);
 	}
 	
 	/**********************************Methods********************************/
@@ -80,7 +82,6 @@ public class MarketControl {
 			System.out.println("hello");
 			return "invalid";
 		}
-		System.out.println(compList.size());
 		model.addAttribute("companies", compList);
 		return "SearchPageResults";
 	}
@@ -111,4 +112,41 @@ public class MarketControl {
 		return "SearchPageResultsDetails";
 	}
 	
+
+	/**
+	 * takes in the parameter of the name or partial name of a company
+	 * and finds more information about the company and adds it to model for 
+	 * the JSP file to read.
+	 * 
+	 * @param model
+	 * 		  Holds information to be used in the JSP files.
+	 * 
+	 * @param name
+	 * 		  partial or full name/ticker of the company to search
+	 * 
+	 * @return string for the JSP file
+	 */
+	@RequestMapping(path="/search", method=RequestMethod.GET)
+	public String search(Model model,  @RequestParam("name") String name){
+		List<String> comps = new ArrayList<String>();
+		List<Company> compList = new ArrayList<Company>();
+		try {
+			comps = cd.findTickers(name).stream().
+					map(comp -> cd.findTicker(comp)).
+					collect(Collectors.toList());
+			compList = comps.stream().map(c -> repo.findCompTick(c)).
+					collect(Collectors.toList());
+		}catch(IEXTradingException e ) {
+			System.out.println("hello");
+		}
+		model.addAttribute("companies", compList);
+		return "search";
+	}
+	
+	@RequestMapping(path="/livesearch", method=RequestMethod.GET)
+	public String search(Model model) {
+		model.addAttribute("companies", compNames);
+		return "livesearch";
+	}
+
 }
