@@ -80,7 +80,6 @@ public class MarketControl {
 			System.out.println("hello");
 			return "invalid";
 		}
-		System.out.println(compList.size());
 		model.addAttribute("companies", compList);
 		return "SearchPageResults";
 	}
