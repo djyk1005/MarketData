@@ -7,6 +7,9 @@
 <meta charset="ISO-8859-1">
 <title>Live Search</title>
 	<style>
+		#myUL li{
+			display: none;
+		}
 		#myInput {
     		width: 100%; /* Full-width */
     		font-size: 16px; /* Increase font-size */
@@ -49,8 +52,11 @@
     	// Loop through all list items, and hide those who don't match the search query
     	for (i = 0; i < li.length; i++) {
         	a = li[i].getElementsByTagName("a")[0];
-        	if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            	li[i].style.display = "";
+        	if(filter.length == 0){
+        		li[i].style.display = "none";
+        	}
+        	else if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            	li[i].style.display = "block";
         	} else {
             	li[i].style.display = "none";
         	}
@@ -64,7 +70,7 @@
 	
 </head>
 <body>
-	<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for companies...">
+	<input type="text" id="myInput" placeholder="Search for companies..." onkeyup="myFunction()" >
 
 	<form id="myForm" action="find" method="GET"> 
 	<input type="hidden" name="ticker" id="comp"></input> 
@@ -86,6 +92,7 @@
 		%>
 	
 	</ul>
+	<h1>HELLO THERE</h1>
 	</form>
 
 </body>
