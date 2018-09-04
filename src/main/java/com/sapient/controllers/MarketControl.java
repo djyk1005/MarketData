@@ -143,10 +143,10 @@ public class MarketControl {
 		return "search";
 	}
 	
-	@RequestMapping(path="/livesearch", method=RequestMethod.GET)
+	@RequestMapping(path="/start", method=RequestMethod.GET)
 	public String search(Model model) {
 		model.addAttribute("companies", compNames);
-		return "livesearch";
+		return "SearchPage";
 	}
 
 }
