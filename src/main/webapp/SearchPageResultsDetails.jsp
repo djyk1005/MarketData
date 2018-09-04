@@ -32,7 +32,7 @@
             border: 10px solid #DAE2EB;
             padding: 10px;
             background-color: #F1F3F6;
-            width: 530.91px;
+            width: 55%;
             position:relative;
             overflow: auto;
             height:250px;
@@ -96,7 +96,7 @@
                     <div class="col-xs-8 col-xs-offset-2">
                         <div class="result-main-details" style="float:left">
                             <b>${company.getName()} (${company.getTick()})</b> </br>
-                            ${company.getPrice()} ${company.getPriceChange()} ${company.getPercentChange()}</br>
+                            <b>${company.getPrice()}</b> ${company.getPriceChange()} ${company.getPercentChange()}</br>
                             ${company.getAvgTotVolume()} </br>
                         </div>
                         <table class="result-details" style="float:right">
