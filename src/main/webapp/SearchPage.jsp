@@ -53,40 +53,56 @@ html, body {
 	margin-left: auto;
 	margin-right: auto;
 }
+#myUL
+ 
+li
+ 
+a
+:hover
+:not
+ 
+(
+.header
+ 
+)
+{
+background-color
+:
+ 
+#eee
+;
+/* Add a hover effect to all links, except for headers */
 
-#myUL li a:hover:not (.header ) {
-	background-color: #eee;
-	/* Add a hover effect to all links, except for headers */
+
 }
 </style>
 
 <script>
-        function myFunction() {
-            // Declare variables
-            var input, filter, ul, li, a, i;
-            input = document.getElementById('myInput');
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("myUL");
-            li = ul.getElementsByTagName('li');
-    
-            // Loop through all list items, and hide those who don't match the search query
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("a")[0];
-                if(filter.length == 0){
-                    li[i].style.display = "none";
-                }
-                else if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "block";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-        function submitform(row, name){
-            document.getElementById("comp").value=name;
-            document.getElementById("myForm").submit();
-        }
-    </script>
+	function myFunction() {
+		// Declare variables
+		var input, filter, ul, li, a, i;
+		input = document.getElementById('myInput');
+		filter = input.value.toUpperCase();
+		ul = document.getElementById("myUL");
+		li = ul.getElementsByTagName('li');
+
+		// Loop through all list items, and hide those who don't match the search query
+		for (i = 0; i < li.length; i++) {
+			a = li[i].getElementsByTagName("a")[0];
+			if (filter.length == 0) {
+				li[i].style.display = "none";
+			} else if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				li[i].style.display = "block";
+			} else {
+				li[i].style.display = "none";
+			}
+		}
+	}
+	function submitform(row, name) {
+		document.getElementById("comp").value = name;
+		document.getElementById("myForm").submit();
+	}
+</script>
 
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -120,24 +136,24 @@ html, body {
 				</div>
 			</div>
 		</div>
-		<form id="myForm" action="find" method="GET">
+		<form id="myForm" action="seeMore" method="GET">
 			<input type="hidden" name="ticker" id="comp"></input> <input
 				type="hidden" name="dropdown" value="company"></input>
 			<ul id="myUL">
 				<%
-                                List<String> comps = (List<String>) request.getAttribute("companies");
-                                int i=1;
-                                for (String c : comps) {
-                                    request.setAttribute("c", c);
-                                    request.setAttribute("row", i);
-                                    i++;
-                            %>
+					List<String> comps = (List<String>) request.getAttribute("companies");
+					int i = 1;
+					for (String c : comps) {
+						request.setAttribute("c", c);
+						request.setAttribute("row", i);
+						i++;
+				%>
 
 				<li id="${row}" onclick="submitform('${row}', '${c}')"><a>${c}</a></li>
 
 				<%
-                                }
-                            %>
+					}
+				%>
 
 			</ul>
 		</form>

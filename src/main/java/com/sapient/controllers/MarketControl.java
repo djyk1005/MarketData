@@ -83,6 +83,7 @@ public class MarketControl {
 			return "invalid";
 		}
 		model.addAttribute("companies", compList);
+		model.addAttribute("companyNames", compNames);
 		return "SearchPageResults";
 	}
 
@@ -100,23 +101,33 @@ public class MarketControl {
 	 * @return string for the JSP file
 	 */
 	@RequestMapping(path="/seeMore", method=RequestMethod.GET)
-	public String details(Model model,  @RequestParam("ticker") String tick){
+	public String details(Model model,  @RequestParam("ticker") String tick,
+			@RequestParam("dropdown") String drop){
 		Company comp = null;
+		List<String> comps = new ArrayList<String>();
 		try {
-			comp = repo.findCompTick(tick);
+			if(drop.equals("ticker")) {
+				comp = repo.findCompTick(tick);
+			
+			}else {
+				comps = cd.findTickers(tick).stream().
+						map(c -> cd.findTicker(c)).
+						collect(Collectors.toList());
+				comp = comps.stream().map(c -> repo.findCompTick(c)).
+						collect(Collectors.toList()).get(0);
+			}
 		}catch(IEXTradingException e ) {
 			System.out.println("hello");
 			return "invalid";
 		}
 		model.addAttribute("company", repo.detailedInfo(comp));
+		model.addAttribute("companyNames", compNames);
 		return "SearchPageResultsDetails";
 	}
 	
-
+	
 	/**
-	 * takes in the parameter of the name or partial name of a company
-	 * and finds more information about the company and adds it to model for 
-	 * the JSP file to read.
+	 * Adds list of company names an goes to the search page.
 	 * 
 	 * @param model
 	 * 		  Holds information to be used in the JSP files.
@@ -126,23 +137,6 @@ public class MarketControl {
 	 * 
 	 * @return string for the JSP file
 	 */
-	@RequestMapping(path="/search", method=RequestMethod.GET)
-	public String search(Model model,  @RequestParam("name") String name){
-		List<String> comps = new ArrayList<String>();
-		List<Company> compList = new ArrayList<Company>();
-		try {
-			comps = cd.findTickers(name).stream().
-					map(comp -> cd.findTicker(comp)).
-					collect(Collectors.toList());
-			compList = comps.stream().map(c -> repo.findCompTick(c)).
-					collect(Collectors.toList());
-		}catch(IEXTradingException e ) {
-			System.out.println("hello");
-		}
-		model.addAttribute("companies", compList);
-		return "search";
-	}
-	
 	@RequestMapping(path="/start", method=RequestMethod.GET)
 	public String search(Model model) {
 		model.addAttribute("companies", compNames);
