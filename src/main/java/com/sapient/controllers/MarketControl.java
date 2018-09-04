@@ -30,6 +30,7 @@ public class MarketControl {
 	
 	/** cd holds the data of all the company names listed on IEX. */
 	CompData cd = new CompData();
+	List<String> compNames = new ArrayList<String>();
 	
 	/***********************Initialization Block******************************/
 
@@ -38,6 +39,7 @@ public class MarketControl {
 	final List<ExchangeSymbol> exchangeSymbolList = iexTradingClient.
 			executeRequest(new SymbolsRequestBuilder().build());
 	cd.addData(exchangeSymbolList);
+	compNames = cd.allCompNames(exchangeSymbolList);
 	}
 	
 	/**********************************Methods********************************/
@@ -134,6 +136,12 @@ public class MarketControl {
 		}
 		model.addAttribute("companies", compList);
 		return "search";
+	}
+	
+	@RequestMapping(path="/livesearch", method=RequestMethod.GET)
+	public String search(Model model) {
+		model.addAttribute("companies", compNames);
+		return "livesearch";
 	}
 
 
